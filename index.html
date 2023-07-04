@@ -18,18 +18,18 @@
             <div class="btn"><a href="vcpm.html" id="form2">VCPM</a></div>
         </div><br>
         <div><h4>Soc. Name</h4>
-            <input type="text" name="Society name" placeholder="Society Name" class="input_box"></div><br>
+            <input type="text" name="Society name" placeholder="Society Name" class="input_box" autocomplete="false"></div><br>
             <div class="input_box"><h4>Area</h4>
-                <input type="area" placeholder="Area" class="input_box" name="Area" required>
+                <input type="area" placeholder="Area" class="input_box" name="Area" required autocomplete="false">
              </div>
             <div class="input_box"><h4>SR.ID</h4>
-                <input type="area" placeholder="Sr.id" class="input_box" name="SR.ID" required>
+                <input type="area" placeholder="Sr.id" class="input_box" name="SR.ID" required autocomplete="false">
              </div>
         
            
         </div>
         <div class="drop_box"><h4>Foundation</h4>
-            <select name="Foundation" id="">
+            <select name="Foundation">
                 <option value="didn't choose any option">Select</option>
                 <option value="Damaged">Damaged</option>
                 <option value="Send required">Send required</option>
@@ -46,12 +46,12 @@
             </select>
         </div><br>
         <div class="remark"><h4>Remark</h4>
-            <textarea name="Remark" cols="25" rows="3"></textarea>
+            <textarea name="Remark" cols="25" rows="3" autocomplete="false"></textarea>
         </div><br>
         <div class="coordinates">
-            <input type="button" onclick="getLocation()" id="location" value="Get location">
+            <input type="button" onclick="getLocation()" id="location" value="Get location" >
             <p id="demo"></p>
-            <input name="Lattitude/Longitude" placeholder="Paste above coordinates">
+            <input name="Lattitude/Longitude" placeholder="Paste above coordinates" autocomplete="false">
         </div><br>
         <div class="button"><input id="button" type="submit" value="submit" placeholder="SUBMIT"><span id="msg"></span></div>
     </div>
