@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Utility</title>
+    <link rel="stylesheet" href="srpm.css" />
+  </head>
+
+  <body>
+    <form name="submit-to-google-sheet" class="form-container" enctype="multipart/form-data">
+      <div class="form-header">
+        <h2>UTILITY</h2>
+        <hr />
+      </div>
+
+      <div class="form-navigation">
+        <a href="index.html" class="nav-btn">SRPM</a>
+        <a href="vcpm.html" class="nav-btn">VCPM</a>
+        <a href="utility.html" class="nav-btn active">UTILITY</a>
+      </div>
+
+      <div class="form-content">
+        <div class="form-group">
+          <label for="date">Date</label>
+          <input type="date" name="Date" id="date" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+          <label for="society">Soc. Name</label>
+          <input type="text" name="SocietyName" id="society" class="form-control" placeholder="Society Name" autocomplete="off" required />
+        </div>
+
+        <div class="form-group">
+          <label for="area">Area</label>
+          <input type="text" name="Area" id="area" class="form-control" placeholder="Area" autocomplete="off" required />
+        </div>
+
+        <div class="form-group">
+          <label for="mobile">Mobile Number</label>
+          <input type="tel" name="MobileNumber" id="mobile" class="form-control" placeholder="Mobile Number" autocomplete="off" required />
+        </div>
+
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" name="Name" id="name" class="form-control" placeholder="Name" autocomplete="off" required />
+        </div>
+
+        <div class="form-group">
+          <label for="thirdparty">Third Party</label>
+          <select name="ThirdParty" id="thirdparty" class="form-control" required>
+            <option value="">Select</option>
+            <option value="Adani Gas">Adani Gas</option>
+            <option value="Airtel">Airtel</option>
+            <option value="Vodafone">Vodafone</option>
+            <option value="AMC">AMC</option>
+            <option value="Reliance Jio">Reliance Jio</option>
+            <option value="Torrent Power">Torrent Power</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="remark">Remark</label>
+          <textarea name="Remark" id="remark" cols="25" rows="3" class="form-control" autocomplete="off"></textarea>
+        </div>
+
+        <div class="form-group">
+          <input type="button" onclick="getLocation()" class="form-control" value="Get location" />
+          <p id="demo" style="margin-top: 10px;"></p>
+          <input name="Lattitude/Longitude" class="form-control" placeholder="Paste above coordinates" autocomplete="off" required />
+        </div>
+
+        <div class="form-group">
+          <input id="button" type="submit" class="form-control" value="Submit" />
+          <span id="msg"></span>
+        </div>
+      </div>
+    </form>
+
+    <script>
+      var x = document.getElementById("demo");
+
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+          x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+      }
+
+      function showPosition(position) {
+        x.innerHTML = position.coords.latitude + "," + position.coords.longitude;
+      }
+
+      function showError(error) {
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            x.innerHTML = "User denied the request for Geolocation.";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            x.innerHTML = "Location information is unavailable.";
+            break;
+          case error.TIMEOUT:
+            x.innerHTML = "The request to get user location timed out.";
+            break;
+          case error.UNKNOWN_ERROR:
+            x.innerHTML = "An unknown error occurred.";
+            break;
+        }
+      }
+
+      const form = document.forms["submit-to-google-sheet"];
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const submitBtn = document.getElementById("button");
+        submitBtn.disabled = true;
+        submitBtn.value = "Submitting...";
+
+        try {
+          const formData = new FormData(form);
+          const response = await fetch(
+            "https://script.google.com/macros/s/AKfycbzGFsp_a-2-wAzomMH1txKEy1YNfQXl5gW5Qdo4Kienx0BvaghpVthPFfQ-xxunnIDApw/exec",
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
+
+          if (response.ok) {
+            form.reset();
+            alert("Form submitted successfully!");
+          } else {
+            throw new Error("Server responded with an error.");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Failed to submit form.");
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.value = "Submit";
+        }
+      });
+    </script>
+  </body>
+</html>

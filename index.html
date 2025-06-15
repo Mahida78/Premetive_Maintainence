@@ -1,97 +1,172 @@
 <!DOCTYPE html>
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maintainence</title>
+    <title>SRPM Maintenance</title>
     <link rel="stylesheet" href="srpm.css">
 </head>
-
 <body>
-    <form name="submit-to-google-sheet" class="content">
-        <div class="fit">
-        <h2>SRPM</h2><hr>
-        <div><h4>Date</h4>
-            <input type="date" name="Date"  class="small_box" placeholder="DD/MM/YYYY">
+    <div class="form-container">
+        <div class="form-header">
+            <h2>SRPM</h2>
+            <hr>
         </div>
-        <div class="form">
-            <div class="btn"><a href="index.html" id="form1">SRPM</a></div>
-            <div class="btn"><a href="vcpm.html" id="form2">VCPM</a></div>
-        </div><br>
-        <div><h4>Soc. Name</h4>
-            <input type="text" name="Society name" placeholder="Society Name" class="input_box" autocomplete="off"></div><br>
-            <div class="input_box"><h4>Area</h4>
-                <input type="area" placeholder="Area" class="input_box" name="Area" required autocomplete="off">
-             </div>
-            <div class="input_box"><h4>SR.ID</h4>
-                <input type="area" placeholder="Sr.id" class="input_box" name="SR.ID" required autocomplete="off">
-             </div>
         
-           
-        </div>
-        <div class="drop_box"><h4>Foundation</h4>
-            <select name="Foundation">
-                <option value="didn't choose any option">Select</option>
-                <option value="Damaged">Damaged</option>
-                <option value="Send required">Send required</option>
-                <option value="Civil Work">Civil Work</option>
-                <option value="Shifting required">Shifting required</option>
-                <option value="Hight-Up required">Hight-Up required</option>
-            </select><br>
-            <h4>Canopy</h4>
-            <select name="Canopy" id="">
-                <option value="Didn't choose any option">Select</option>
-                <option value="Light-Up">Missing</option>
-                <option value="Damaged">Corroded</option>
-                <option value="Damaged">Damaged</option>
-            </select>
-        </div><br>
-        <div class="remark"><h4>Remark</h4>
-            <textarea name="Remark" cols="25" rows="3" autocomplete="off"></textarea>
-        </div><br>
-        <div class="coordinates">
-            <input type="button" onclick="getLocation()" id="location" value="Get location" autocomplete="off">
-            <p id="demo"></p>
-            <input name="Lattitude/Longitude" placeholder="Paste above coordinates" autocomplete="off">
-        </div><br>
-        <div class="button"><input id="button" type="submit" value="submit" placeholder="SUBMIT"><span id="msg"></span></div>
+        <form name="submit-to-google-sheet" class="form-content">
+            <div class="form-navigation">
+                <a href="index.html" class="nav-btn active">SRPM</a>
+                <a href="vcpm.html" class="nav-btn">VCPM</a>
+                <a href="utility.html" class="nav-btn">UTILITY</a>
+            </div>
+            
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="Date" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="society-name">Society Name</label>
+                <input type="text" id="society-name" name="Society name" class="form-control" placeholder="Enter society name" required>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="area">Area</label>
+                        <input type="text" id="area" name="Area" class="form-control" placeholder="Enter area" required>
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="sr-id">SR.ID</label>
+                        <input type="text" id="sr-id" name="SR.ID" class="form-control" placeholder="Enter SR ID" required>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="foundation">Foundation</label>
+                        <select id="foundation" name="Foundation" class="form-control" required>
+                            <option value="">Select status</option>
+                            <option value="Damaged">Damaged</option>
+                            <option value="Send required">Send required</option>
+                            <option value="Civil Work">Civil Work</option>
+                            <option value="Shifting required">Shifting required</option>
+                            <option value="Hight-Up required">Hight-Up required</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="canopy">Canopy</label>
+                        <select id="canopy" name="Canopy" class="form-control" required>
+                            <option value="">Select status</option>
+                            <option value="Missing">Missing</option>
+                            <option value="Corroded">Corroded</option>
+                            <option value="Damaged">Damaged</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="remark">Remark</label>
+                <textarea id="remark" name="Remark" class="form-control" placeholder="Enter any additional remarks"></textarea>
+            </div>
+            
+            <div class="location-section">
+                <button type="button" class="location-btn" onclick="getLocation()">Get Current Location</button>
+                <p id="coordinates" class="coordinates-display">Coordinates will appear here</p>
+                <input type="text" name="Lattitude/Longitude" class="form-control" placeholder="Paste coordinates here" required>
+            </div>
+            
+            <button type="submit" class="submit-btn">Submit Report</button>
+            <div id="msg" class="status-message"></div>
+        </form>
     </div>
-    </form>
-    <script>
-        var x = document.getElementById("demo");
 
+    <script>
+        const coordinatesDisplay = document.getElementById('coordinates');
+        
         function getLocation() {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
+                navigator.geolocation.getCurrentPosition(
+                    showPosition, 
+                    showError,
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                );
             } else {
-                x.innerHTML = "Geolocation is not supported by this browser.";
+                showMessage("Geolocation is not supported by this browser.", 'error');
             }
         }
 
         function showPosition(position) {
-            x.innerHTML = position.coords.latitude +
-                "," + position.coords.longitude;
-
+            const coords = `${position.coords.latitude}, ${position.coords.longitude}`;
+            coordinatesDisplay.textContent = coords;
+            showMessage("Location captured successfully!", 'success');
         }
+
+        function showError(error) {
+            let message = "Error getting location: ";
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    message += "User denied the request for Geolocation.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    message += "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    message += "The request to get user location timed out.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    message += "An unknown error occurred.";
+                    break;
+            }
+            showMessage(message, 'error');
+        }
+
+        function showMessage(text, type) {
+            const msgElement = document.getElementById('msg');
+            msgElement.textContent = text;
+            msgElement.className = `status-message ${type}-message`;
+            setTimeout(() => {
+                msgElement.textContent = '';
+                msgElement.className = 'status-message';
+            }, 5000);
+        }
+
+        const form = document.forms['submit-to-google-sheet'];
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const submitBtn = form.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            fetch("https://script.google.com/macros/s/AKfycby-A2jDD0qx-Ea2Z2oV1GMEmLs23wvw4YhzGPGFhzyCz5988RU8AgpedbQN0tdu64AaSA/exec", {
+                method: 'POST',
+                body: new FormData(form)
+            })
+            .then(response => {
+                if (response.ok) {
+                    showMessage("All data sent successfully!", 'success');
+                    form.reset();
+                    coordinatesDisplay.textContent = 'Coordinates will appear here';
+                } else {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage("Error submitting form. Please try again.", 'error');
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Report';
+            });
+        });
     </script>
-            <script>
-                const scriptURL = "https://script.google.com/macros/s/AKfycbx9olXn7GySHWRWsC1EFdNMYE0mXrGPZrar5XcqCKlzrjai3xps0V1efTvYhgiS7AXxaQ/exec";
-
-                const form = document.forms['submit-to-google-sheet']
-                const msg = document.getElementById('msg')
-        
-                form.addEventListener('submit', e => {
-                    e.preventDefault()
-                    fetch(scriptURL, { method: 'POST', body: new FormData(form) })
-                        .then(response => {
-                            msg.innerHTML = "All data sent succesfully :)"
-                            setTimeout(function () {
-                                msg.innerHTML = " "
-                            }, 5000)
-                            form.reset()
-                        })
-                        .catch(error => console.error('Error!', error.message))
-                })
-            </script>
 </body>
-
 </html>
